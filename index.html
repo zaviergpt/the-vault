@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap');
+            * {
+                border: 0;
+                padding: 0;
+                margin: 0;
+                outline: none;
+                user-select: none;
+                font-family: "Geologica", system-ui;
+                font-optical-sizing: auto;
+                transition: all 0.5s;
+                font-weight: 300;
+            }
+            body {
+                background-color: #222222;
+                color: #FFFFFF;
+            }
+            .container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 75%;
+                max-width: 300px;
+            }
+            .container .tab {
+                display: none;
+            }
+            .container #login-tab .section {
+                display: none;
+            }
+            .container #login-tab .section input[type="password"], .container #create-tab input[type="text"] {
+                background-color: rgba(0, 0, 0, 0);
+                padding: 10px 0px;
+                border: 1px solid #FFFFFF;
+                color: #FFFFFF;
+                font-size: 16px;
+                text-align: center;
+                border-radius: 2.5px;
+                width: calc(100% - 2px)
+            }
+            .container #login-tab .section h1, .container #default-tab .heading {
+                font-size: 16px;
+                font-weight: 500;
+                text-align: center;
+                margin: 10px 0px;
+            }
+            .container #default-tab ul {
+                height: 75%;
+                max-height: 400px;
+                margin: 5px 0px;
+                overflow: auto;
+            }
+            .container #default-tab ul li {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 45px;
+            }
+            .container #default-tab ul li .icon {
+                display: flex;
+                aspect-ratio: 1;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                font-size: 125%;
+                margin-right: 5px;
+            }
+            .container #default-tab ul li .info {
+                width: calc(100% - 45px - 5px - 45px)
+            }
+            .container #default-tab ul li .info h1 {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: calc(16px/1.25);
+                color: #FFFFFF;
+            }
+            .container #default-tab ul li .info span {
+                font-size: 12.5px;
+                color: rgba(255, 255, 255, 0.5);
+            }
+            .container #default-tab ul li .actions {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+            }
+            .container #default-tab ul li .actions button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                aspect-ratio: 1;
+                font-size: 100%;
+                background-color: rgba(0, 0, 0, 0);
+                color: #FFFFFF;
+            }
+            .container #default-tab ul li .actions button:focus {
+                color: #AAAAAA;
+            }
+            .container #default-tab .actions:not(ul li .actions) {
+                margin: 10px 0px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .container #default-tab .actions:not(ul li .actions) button, .container #create-tab button {
+                padding: 7.5px calc(7.5px * 1.5);
+                font-weight: 700;
+                background-color: #FFFFFF;
+                color: #222222;
+                border-radius: 2.5px;
+            }
+            .container #create-tab h1 {
+                font-size: 16px;
+                font-weight: 500;
+                text-align: center;
+                margin: 10px 0px;
+            }
+            .container #create-tab button {
+                margin: 20px auto;
+            }
+            .container #create-tab .section {
+                display: none;
+            }
+            .overlay {
+                display: none;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(50px);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+            .overlay .frame {
+                width: 75%;
+                max-width: 300px;
+            }
+            .overlay .frame h1 {
+                font-size: 16px;
+                font-weight: 500;
+                text-align: center;
+                margin: 10px 0px;
+            }
+            .overlay .frame .input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #FFFFFF;
+                border-radius: 2.5px;
+            }
+            .overlay .frame .input input[type="text"] {
+                background-color: rgba(0, 0, 0, 0);
+                color: #FFFFFF;
+                font-size: 16px;
+                padding: 10px 0px;
+                width: calc(100% - 39px - 2px - 12.5px);
+                padding-left: 12.5px;
+            }
+            .overlay .frame .input button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #FFFFFF;
+                background-color: rgba(0, 0, 0, 0);
+                width: 39px;
+            }
+            .overlay .frame #overlay-close {
+                padding: 7.5px calc(7.5px * 1.5);
+                font-weight: 700;
+                background-color: #FFFFFF;
+                color: #222222;
+                border-radius: 2.5px;
+                margin: 10px 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="tab" id="login-tab">
+                <div class="section" id="login-section">
+                    <h1 onclick="localStorage.clear(); window.location.reload()">Vault Login</h1>
+                    <input type="password" placeholder="Password" id="login-login-password">
+                </div>
+                <div class="section" id="create-section">
+                    <h1>Create Vault</h1>
+                    <input type="password" placeholder="Password" id="login-create-password">
+                </div>
+            </div>
+            <div class="tab" id="create-tab">
+                <h1>Add Account</h1>
+                <input type="text" placeholder="Name" id="create-name">
+                <div class="section" id="create-generated-section" style="margin: 20px 0px">
+                    <h1>Generated Password</h1>
+                    <p style="margin: 10px 0px; font-size: 14px; text-align: center; line-height: 14px">
+                        A Password has been generated for you.
+                        use this Password to Sign Up for your account.
+                    </p>
+                    <input type="text" id="create-generated-input">
+                    <div style="display: flex; align-items: centers; justify-content: center">
+                        <button id="create-continue">Continue<i class="fa-solid fa-arrow-right" style="margin-left: 7.5px"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab" id="default-tab">
+                <h1 class="heading">All Accounts</h1>
+                <ul id="default-list"></ul>
+                <div class="actions">
+                    <button id="default-create"><i class="fa-solid fa-plus" style="margin-right: 7.5px"></i>Add Account</button>
+                </div>
+            </div>
+        </div>
+        <div class="overlay" id="overlay">
+            <div class="frame">
+                <h1>Show Password</h1>
+                <div class="input">
+                    <input type="text" id="overlay-input">
+                    <button><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <div style="display: flex; align-items: centers; justify-content: center">
+                    <button id="overlay-close"><i class="fa-solid fa-xmark" style="margin-right: 7.5px"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        const API = (function(){
+            return {
+                vault: {
+                    create(name, key) {
+                        cache = JSON.parse(localStorage.getItem("cache"))
+                        name = name.toLowerCase().split(" ").join("-")
+                        if (cache[1].filter((item) => (item[0] === name)).length < 1) {
+                            result = this.generate(name, key, cache[2][0])
+                            cache[1].push([result[0], result[2]])
+                            localStorage.setItem("cache", JSON.stringify(cache))
+                            return result
+                        } else return null
+                    },
+                    retrieve(name, key) {
+                        cache = JSON.parse(localStorage.getItem("cache"))
+                        if (cache[1].filter((item) => (item[0] === name)).length > 0) {
+                            selected = cache[1].filter((item) => (item[0] === name))[0]
+                            return this.generate(selected[0], key, selected[1])
+                        } else return null
+                    },
+                    generate(name, key, strength) {
+                        hashes = [
+                            key.split("").map((character) => character.charCodeAt(0)),
+                            name.split("").map((character) => character.charCodeAt(0))
+                        ]
+                        characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ`~1!2@3#4$5%6^7&8*9(0)-_=+[{]}|;:',<.>/?"
+                        while (hashes[0].length < strength) hashes[0] = hashes[0].concat(hashes[0])
+                        while (hashes[1].length < hashes[0].length) hashes[1] = hashes[1].concat(hashes[1])
+                        hashes = [hashes[0].slice(0, strength), hashes[1].slice(0, strength), []]
+                        for (var character in hashes[0]) hashes[2].push(hashes[0][character] ^ hashes[1][character])
+                        range = [Math.min(...hashes[2]), Math.max(...hashes[2])]
+                        return [name, hashes[2].map((character) => characters[Math.round((character-range[0])/(range[1]+1-range[0]) * characters.length)]).join(""), strength]
+                    },
+                    delete(name) {
+                        cache = JSON.parse(localStorage.getItem("cache"))
+                        if (cache[1].filter((item) => (item[0] === name)).length > 0) {
+                            selected = cache[1].filter((item) => (item[0] === name))[0]
+                            cache[1].splice(cache[1].indexOf(selected), 1)
+                            console.log(cache)
+                            localStorage.setItem("cache", JSON.stringify(cache))
+                            return selected
+                        } else return null
+                    },
+                    all() {
+                        return JSON.parse(localStorage.getItem("cache"))[1]
+                    }
+                },
+                login(key) {
+                    id = 0
+                    key.split("").forEach((character) => id += character.charCodeAt(0))
+                    hash = key.split("").map((character) => character.charCodeAt(0).toString()).join("")
+                    if (!localStorage.getItem("cache")) localStorage.setItem("cache", JSON.stringify([`${hash}+${id}`, [], [20, "dark"]]))
+                    if (JSON.parse(localStorage.getItem("cache"))[0] === `${hash}+${id}`) return true
+                    else return false
+                }
+            }
+        })()
+        window.addEventListener("DOMContentLoaded", () => {
+            elements = {
+                login: [{
+                    login: [{
+                        password: [document.getElementById("login-login-password"), null]
+                    }, document.getElementById("login-section")],
+                    create: [{
+                        password: [document.getElementById("login-create-password"), null]
+                    }, document.getElementById("create-section")]
+                }, document.getElementById("login-tab")],
+                default: [{
+                    list: [document.getElementById("default-list"), []],
+                    add: document.getElementById("default-create"),
+                    overlay: [{
+                        input: document.getElementById("overlay-input"),
+                        close: document.getElementById("overlay-close")
+                    }, document.getElementById("overlay")]
+                }, document.getElementById("default-tab")],
+                create: [{
+                    name: [document.getElementById("create-name"), null],
+                    generated: [{
+                        generated: document.getElementById("create-generated-input"),
+                        continue: document.getElementById("create-continue"),
+                    }, document.getElementById("create-generated-section")]
+                }, document.getElementById("create-tab")]
+            }
+            function update() {
+                elements.default[0].list[1] = API.vault.all()
+                elements.default[0].list[0].innerHTML = ""
+                icons = ["facebook", "instagram", "tiktok", "linkedin", "github", "discord", "apple", "google", "medium", "cloudflare", "pinterest", "soundcloud", "spotify", "microsoft", "twitch", "waze", "yahoo", "threads", "steam", "snapchat", "reddit", "quora", "padlet", "ebay", "digital-ocean"]
+                for (var item in elements.default[0].list[1]) {
+                    item = [elements.default[0].list[1][item], document.createElement("li"), [
+                        document.createElement("i"), document.createElement("div"), document.createElement("div"), document.createElement("button")
+                    ]]
+                    item[2][0].className = `icon ${icons.includes(item[0][0]) ? "fa-brands fa-" + item[0][0] : "fa-solid fa-question"}`
+                    item[2][1].className = "info"
+                    item[2][2].className = "actions"
+                    item[2][1].innerHTML = `
+                        <h1>${item[0][0]}</h1>
+                        <span>strength: ${item[0][1]}</span>
+                    `
+                    item[2][3].innerHTML = `<i class="fa-regular fa-eye"></i>`
+                    item[2][3].id = item[0][0]
+                    item[2][3].onclick = function() {
+                        key = API.vault.retrieve(this.id, elements.login[0].login[0].password[0].value)
+                        elements.default[0].overlay[0].input.value = key[1]
+                        elements.default[0].overlay[1].style.display = "flex"
+                        elements.default[0].overlay[0].close.onclick = function() {
+                            update()
+                        }
+                    }
+                    item[2][2].appendChild(item[2][3])
+                    item[1].appendChild(item[2][0])
+                    item[1].appendChild(item[2][1])
+                    item[1].appendChild(item[2][2])
+                    elements.default[0].list[0].appendChild(item[1])
+                }
+                if (elements.default[0].list[1].length < 1) {
+                    elements.default[0].list[0].innerHTML = "<p style='text-align: center; color: rgba(255, 255, 255, 0.5); padding-bottom: 5px'>No accounts available</p>"
+                }
+                elements.default[0].add.onclick = function() {
+                    elements.create[0].name[0].addEventListener("input", () => {
+                        if (elements.create[0].name[0].value.length > 0) {
+                            if (elements.create[0].name[1]) clearTimeout(elements.create[0].name[1])
+                            elements.create[0].name[1] = setTimeout(function(){
+                                key = API.vault.create(elements.create[0].name[0].value, elements.login[0].login[0].password[0].value)
+                                if (key) {
+                                    setTimeout(function(){
+                                        elements.create[0].generated[1].style.display = "block"
+                                        elements.create[0].generated[0].generated.value = key[1]
+                                        elements.create[0].generated[0].continue.onclick = function() {
+                                            update()
+                                        }
+                                    }, 500)
+                                    elements.create[0].name[0].style.border = "1px solid #217ff3"
+                                } else {
+                                    elements.create[0].name[0].style.border = "1px solid #ff766f"
+                                }
+                            }, 1000)
+                        }
+                    })
+                    elements.create[0].name[0].style.border = "1px solid #ffffff"
+                    elements.create[0].generated[1].style.display = "none" 
+                    elements.create[0].name[0].value = ""
+                    elements.default[1].style.display = "none"
+                    elements.create[1].style.display = "block"
+                }
+                elements.login[1].style.display = "none"
+                elements.default[1].style.display = "block"
+                elements.create[1].style.display = "none"
+                elements.default[0].overlay[1].style.display = "none"
+            }
+            if (localStorage.getItem("cache")) {
+                elements.login[0].login[0].password[0].addEventListener("input", () => {
+                    if (elements.login[0].login[0].password[1]) clearTimeout(elements.login[0].login[0].password[1])
+                    if (elements.login[0].login[0].password[0].value.length > 0) {
+                        elements.login[0].login[0].password[1] = setTimeout(function(){
+                            if (API.login(elements.login[0].login[0].password[0].value)) {
+                                setTimeout(function(){
+                                    update()
+                                }, 1500)
+                                elements.login[0].login[0].password[0].style.border = "1px solid #4caf50"
+                            } else {
+                                elements.login[0].login[0].password[0].style.border = "1px solid #ff766f"
+                            }
+                        }, 500)
+                    }
+                })
+                elements.login[0].login[1].style.display = "block"
+            } else {
+                elements.login[0].create[0].password[0].addEventListener("input", () => {
+                    if (elements.login[0].create[0].password[1]) clearTimeout(elements.login[0].create[0].password[1])
+                    if (elements.login[0].create[0].password[0].value.length > 0) {
+                        elements.login[0].create[0].password[1] = setTimeout(function(){
+                            if (API.login(elements.login[0].create[0].password[0].value)) {
+                                setTimeout(function(){
+                                    window.location.reload()
+                                }, 1000)
+                                elements.login[0].create[0].password[0].style.border = "1px solid #217ff3"
+                            }
+                        }, 1000)
+                    }
+                })
+                elements.login[0].create[1].style.display = "block"
+            }
+            elements.login[1].style.display = "block"
+        })
+    </script>
+</html>
