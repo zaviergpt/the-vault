@@ -3,7 +3,7 @@
     <head>
         <title></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="manifest" href="./manifest.json">
+        <link rel="manifest" href="/manifest.json">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap');
@@ -62,7 +62,7 @@
                 display: flex;
                 align-items: center;
                 width: 100%;
-                height: 45px;
+                height: 50px;
             }
             .container #default-tab ul li .icon {
                 display: flex;
@@ -70,8 +70,7 @@
                 align-items: center;
                 justify-content: center;
                 height: 100%;
-                font-size: 125%;
-                margin-right: 5px;
+                font-size: 137.5%;
             }
             .container #default-tab ul li .info {
                 width: calc(100% - 45px - 5px - 45px)
@@ -83,7 +82,7 @@
                 color: #FFFFFF;
             }
             .container #default-tab ul li .info span {
-                font-size: 12.5px;
+                font-size: calc(16px/1.5);
                 color: rgba(255, 255, 255, 0.5);
             }
             .container #default-tab ul li .actions {
@@ -91,16 +90,6 @@
                 align-items: center;
                 justify-content: center;
                 height: 100%;
-            }
-            .container #default-tab ul li .actions button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                aspect-ratio: 1;
-                font-size: 100%;
-                background-color: rgba(0, 0, 0, 0);
-                color: #FFFFFF;
             }
             .container #default-tab ul li .actions button:focus {
                 color: #AAAAAA;
@@ -323,18 +312,16 @@
                 icons = ["facebook", "instagram", "tiktok", "linkedin", "github", "discord", "apple", "google", "medium", "cloudflare", "pinterest", "soundcloud", "spotify", "microsoft", "twitch", "waze", "yahoo", "threads", "steam", "snapchat", "reddit", "quora", "padlet", "ebay", "digital-ocean"]
                 for (var item in elements.default[0].list[1]) {
                     item = [elements.default[0].list[1][item], document.createElement("li"), [
-                        document.createElement("i"), document.createElement("div"), document.createElement("div"), document.createElement("button")
+                        document.createElement("i"), document.createElement("div")
                     ]]
                     item[2][0].className = `icon ${icons.includes(item[0][0]) ? "fa-brands fa-" + item[0][0] : "fa-solid fa-question"}`
                     item[2][1].className = "info"
-                    item[2][2].className = "actions"
                     item[2][1].innerHTML = `
                         <h1>${item[0][0]}</h1>
-                        <span>strength: ${item[0][1]}</span>
+                        <span>${item[0][1]} characters</span>
                     `
-                    item[2][3].innerHTML = `<i class="fa-regular fa-eye"></i>`
-                    item[2][3].id = item[0][0]
-                    item[2][3].onclick = function() {
+                    item[1].id = item[0][0]
+                    item[1].onclick = function() {
                         key = API.vault.retrieve(this.id, elements.login[0].login[0].password[0].value)
                         elements.default[0].overlay[0].input.value = key[1]
                         elements.default[0].overlay[1].style.display = "flex"
@@ -342,10 +329,8 @@
                             update()
                         }
                     }
-                    item[2][2].appendChild(item[2][3])
                     item[1].appendChild(item[2][0])
                     item[1].appendChild(item[2][1])
-                    item[1].appendChild(item[2][2])
                     elements.default[0].list[0].appendChild(item[1])
                 }
                 if (elements.default[0].list[1].length < 1) {
@@ -419,7 +404,7 @@
             elements.login[1].style.display = "block"
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./worker.js')
+                    navigator.serviceWorker.register('/worker.js')
                     .then(registration => {
                         console.log('Service Worker registered with scope:', registration.scope)
                     })
