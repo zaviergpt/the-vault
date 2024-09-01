@@ -3,6 +3,7 @@
     <head>
         <title></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="manifest" href="/manifest.json">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap');
@@ -416,6 +417,17 @@
                 elements.login[0].create[1].style.display = "block"
             }
             elements.login[1].style.display = "block"
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope)
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error)
+                    })
+                });
+            }
         })
     </script>
 </html>
