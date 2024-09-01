@@ -1,9 +1,9 @@
 const CACHE_NAME = 'the-vault';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/icon192.png',
-  '/icon512.png'
+  './',
+  './index.html',
+  './icon192.png',
+  './icon512.png'
 ];
 
 self.addEventListener('install', event => {
